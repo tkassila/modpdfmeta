@@ -1,0 +1,29 @@
+Arkkitehdin suositus: Ei kannata vaihtaa ICU4J:hin.
+
+Tässä perustelut ja vaihtoehtojen vertailu:
+
+1. Miksi ICU4J ei ole tässä tapauksessa hyvä valinta?
+Jättimäinen koko vs. minimaalinen hyöty:
+juniversalchardet on vain noin 260 kilotavua (erittäin kevyt, nopea ja tarkoitukseen viilattu).
+icu4j (IBM ICU) on noin 14–15 megatavua – yli 55 kertaa suurempi riippuvuus, koska se sisältää valtavan määrän globaalia kalenteri-, valuutta- ja Unicode-taulukkodataa.
+Ei ratkaise dokumentin kielen tunnistusta:
+Kuten yhteenvedossasi todettiin, CharsetDetector.getLanguage() toimii vain silloin, kun itse merkistökoodaus on kielisidonnainen (esim. kreikkalainen ISO-8859-7).
+Nykyaikaisissa ja standardeissa teksteissä (UTF-8 tai UTF-16) ICU4J ei kerro kielestä mitään – se ilmoittaa vain merkistön olevan UTF-8.
+Projektin ohjeistus (Agents.md):
+Projektin määrittelyssä on erikseen linjattu käyttää com.github.albfernandez.juniversalchardet -kirjastoa keveyden ja standardinomaisuuden vuoksi.
+2. Miten nykyinen toteutus jo hoitaa nämä asiat?
+Tarve	Nykyinen ratkaisu sovelluksessamme
+Merkistön tunnistus (UTF-8, UTF-16BE BOM, Windows-1252, ISO-8859-1)	juniversalchardet + CharsetFixerService (BOM-tunnistus, mojibake-purku Ã¤ 
+→
+→ ä ja manuaalinen pakotusvalikko).
+Väärän merkistön korjaus	Painike "Korjaa merkistö UTF:ksi" tallentaa PDF:n matalan tason kentät aina puhtaana Unicode UTF-16BE BOM:lla.
+Dokumentin tekstin kieli (language: fi/en/sv)	1. Sääntöpohjainen kielipäättely yleisimmistä sanoista (CharsetFixerService.paatteleKieliTekstista)
+2. "Hae ai metadataa" (Gemini AI / Ollama), joka ymmärtää tekstin semantiikan ja kielen suoraan.
+3. Milloin kirjaston vaihtoa kannattaisi harkita?
+Jos halutaan ammattimainen, offline-tilassa toimiva luonnollisen kielen tunnistin (Language Detection):
+Tällöin oikea ratkaisu ei ole ICU, vaan erikoistunut kielentunnistuskirjasto:
+Lingua (com.github.pemistahl:lingua): Erittäin tarkka ja moderni Java-kirjasto, joka erottaa luotettavasti suomen, ruotsin, viron jne. jopa lyhyistä tekstinpätkistä.
+Optimaize language-detector tai Apache OpenNLP / Tika LanguageDetector.
+Yhteenveto
+
+Pysyminen nykyisessä juniversalchardetissa + CharsetFixerServicessä pitää sovelluksen kevyenä, nopeana ja toimintavarmana ilman 15 megatavun lisäkuormaa. Jos dokumentin kirjoitetun kielen tunnistukseen tarvitaan lisätehoa offline-tilassa ilman Gemini AI:ta, suositeltavampi lisäys olisi nimenomaan erikoistunut kielentunnistin (kuten Lingua).

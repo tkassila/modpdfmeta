@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.metait.modpdfmeta.controller.PdfEpubMetaWriterController"
+            stylesheets="@dark-theme.css" prefHeight="760.0" prefWidth="1200.0">
+
+    <!-- YLÄPALKKI -->
+    <top>
+        <VBox spacing="8.0" styleClass="header-box">
+            <!-- Ylätyökalut -->
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <Button fx:id="btnAvaaTiedosto" text="Avaa tiedosto..." onAction="#onAvaaTiedosto">
+                    <tooltip>
+                        <Tooltip text="Avaa tiedosto..."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnValitseHakemisto" text="Valitse hakemisto..." onAction="#onValitseHakemisto">
+                    <tooltip>
+                        <Tooltip text="Valitse hakemisto..."/>
+                    </tooltip>
+                </Button>
+                <CheckBox fx:id="cbAlihakemistot" text="Lue myös alihakemistot">
+                    <tooltip>
+                        <Tooltip text="Lue myös alihakemistot"/>
+                    </tooltip>
+                </CheckBox>
+                <Separator orientation="VERTICAL"/>
+                <Button fx:id="btnEdellinen" text="◄ Edellinen" onAction="#onEdellinen" disable="true">
+                    <tooltip>
+                        <Tooltip text="◄ Edellinen"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnSeuraava" text="Seuraava ►" onAction="#onSeuraava" disable="true">
+                    <tooltip>
+                        <Tooltip text="Seuraava ►"/>
+                    </tooltip>
+                </Button>
+                <Separator orientation="VERTICAL"/>
+                <Button fx:id="btnNimeaTiedosto" text="Nimeä tiedosto uudelleen" onAction="#onNimeaTiedosto" disable="true">
+                    <tooltip>
+                        <Tooltip text="Nimeä tiedosto uudelleen"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnEtsiEpub" text="Etsi vastaavaa .epub dokumenttia" onAction="#onEtsiEpub" disable="true" styleClass="accent-button">
+                    <tooltip>
+                        <Tooltip text="Etsi vastaavaa .epub dokumenttia"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnEtsiMetadataTekstista" text="Etsi metadataa tekstistä" onAction="#onEtsiMetadataTekstista" disable="true" styleClass="accent-button">
+                    <tooltip>
+                        <Tooltip text="Etsi metadataa tekstistä"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnHaeAiMetadataa" text="Hae ai metadataa" onAction="#onHaeAiMetadataa" disable="true" styleClass="accent-button">
+                    <tooltip>
+                        <Tooltip text="Hae ai metadataa"/>
+                    </tooltip>
+                </Button>
+                <Region HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cbKieli" prefWidth="110.0" onAction="#onVaihdaKieli">
+                    <tooltip>
+                        <Tooltip text="Valitse kieli / Select language"/>
+                    </tooltip>
+                </ComboBox>
+                <Button fx:id="btnOhje" text="❓ Ohje" onAction="#onNaytaOhje">
+                    <tooltip>
+                        <Tooltip text="Käyttöohje / User Guide / Benutzerhandbuch / Guide / Guía / Hjälp"/>
+                    </tooltip>
+                </Button>
+            </HBox>
+
+            <!-- Polkujen ja avatun tiedoston info -->
+            <HBox spacing="20.0" alignment="CENTER_LEFT">
+                <Label fx:id="lblHakemisto" text="Avattu hakemisto: (ei valittu)" styleClass="info-label"/>
+                <Label text="|" styleClass="info-label"/>
+                <Label fx:id="lblTiedosto" text="Avattu tiedosto: (ei avattu)" styleClass="info-label"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- KESKIOSA: Jaettu tiedostolistaan ja metatietopaneeleihin -->
+    <center>
+        <SplitPane dividerPositions="0.25">
+            <!-- VASEN PUOLI: Tiedostolistaus -->
+            <VBox spacing="8.0">
+                <padding>
+                    <Insets top="10.0" right="8.0" bottom="10.0" left="10.0"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT">
+                    <Label fx:id="lblTiedostojaLkm" text="Tiedostot (0 kpl)" styleClass="panel-title"/>
+                </HBox>
+                <ListView fx:id="fileListView" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- OIKEA PUOLI: Metatietonäkymät vieritettävässä laatikossa -->
+            <ScrollPane fitToWidth="true" fitToHeight="true">
+                <VBox spacing="14.0">
+                    <padding>
+                        <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                    </padding>
+
+                    <!-- Kopiointipalkki XML <-> Matala taso -->
+                    <HBox spacing="12.0" alignment="CENTER">
+                        <Button fx:id="btnKopioiXmlToLow" text="◄ Kopioi XML:stä matalan tason kenttiin" onAction="#onKopioiXmlToLow" disable="true"/>
+                        <Button fx:id="btnKopioiLowToXml" text="Kopioi matalalta tasolta XML-kenttiin ►" onAction="#onKopioiLowToXml" disable="true"/>
+                    </HBox>
+
+                    <!-- Metatietopaneelit vierekkäin -->
+                    <HBox spacing="14.0" VBox.vgrow="ALWAYS">
+
+                        <!-- 1. PANEELI: Matalan tason metatiedot -->
+                        <VBox spacing="10.0" styleClass="meta-panel" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lblLowPanelTitle" text="Matalan tason metatiedot (COSDictionary)" styleClass="panel-title"/>
+                            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                <Label fx:id="lblLowCharsetText" text="Merkistö:" styleClass="field-label"/>
+                                <ComboBox fx:id="cbLowCharset" prefWidth="160.0" disable="true" onAction="#onValitseMerkisto"/>
+                                <Label fx:id="lblLowCharset" text="Tunnistettu: -" styleClass="charset-label"/>
+                            </HBox>
+                            <HBox fx:id="boxCharsetWarning" spacing="10.0" alignment="CENTER_LEFT" visible="false" managed="false">
+                                <Label fx:id="lblCharsetWarning" text="" styleClass="warning-label" wrapText="true" HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="btnKorjaaMerkisto" text="Korjaa merkistö UTF:ksi" onAction="#onKorjaaMerkisto" styleClass="accent-button">
+                                    <tooltip><Tooltip text="Korjaa Mojibake-merkit ja asettaa kentät tallennettavaksi standardissa Unicode UTF-16BE -muodossa."/></tooltip>
+                                </Button>
+                            </HBox>
+
+                            <GridPane hgap="8.0" vgap="8.0">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="85.0" prefWidth="95.0"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+
+                                <Label fx:id="lblLowTitleLabel" text="Otsikko (Title):" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfLowTitle" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnLowTitleToXmp" text="►" onAction="#onKopioiLowTitleToXmp" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi XML-kenttään (Title ►)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblLowAuthorLabel" text="Tekijä (Author):" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfLowAuthor" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnLowAuthorToXmp" text="►" onAction="#onKopioiLowAuthorToXmp" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi XML-kenttään (Author ►)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblLowPublisherLabel" text="Luoja/Kustantaja:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfLowPublisher" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnLowPublisherToXmp" text="►" onAction="#onKopioiLowPublisherToXmp" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi XML-kenttään (Publisher ►)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblLowSubjectLabel" text="Aihe (Subject):" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfLowSubject" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnLowSubjectToXmp" text="►" onAction="#onKopioiLowSubjectToXmp" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi XML-kenttään (Subject ►)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblLowKeywordsLabel" text="Avainsanat:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfLowKeywords" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnLowKeywordsToXmp" text="►" onAction="#onKopioiLowKeywordsToXmp" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi XML-kenttään (Keywords ►)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblLowDateLabel" text="Päiväys/Vuosi:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfLowDate" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnLowDateToXmp" text="►" onAction="#onKopioiLowDateToXmp" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi XML-kenttään (Date ►)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblLowLanguageLabel" text="Kieli (Language):" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfLowLanguage" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnLowLanguageToXmp" text="►" onAction="#onKopioiLowLanguageToXmp" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi XML-kenttään (Language ►)"/></tooltip>
+                                    </Button>
+                                </HBox>
+                            </GridPane>
+
+                            <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="ALWAYS">
+                                <Button fx:id="btnTallennaLow" text="Tallenna PDF (Matala taso)" onAction="#onTallennaLow" disable="true" styleClass="primary-button"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- 2. PANEELI: XML / XMP -metatiedot -->
+                        <VBox spacing="10.0" styleClass="meta-panel" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lblXmpPanelTitle" text="XML- / XMP-metatiedot (Dublin Core)" styleClass="panel-title"/>
+                            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                <Label fx:id="lblXmpCharset" text="Merkistö: UTF-8 (XMP)" styleClass="charset-label"/>
+                                <Label fx:id="lblXmpStandard" text="✓ Standardi Unicode" styleClass="success-label"/>
+                            </HBox>
+
+                            <GridPane hgap="8.0" vgap="8.0">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="85.0" prefWidth="95.0"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+
+                                <Label fx:id="lblXmpTitleLabel" text="Otsikko (Title):" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfXmpTitle" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnXmpTitleToLow" text="◄" onAction="#onKopioiXmpTitleToLow" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi matalan tason kenttään (◄ Title)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblXmpAuthorLabel" text="Tekijä (Creator):" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfXmpAuthor" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnXmpAuthorToLow" text="◄" onAction="#onKopioiXmpAuthorToLow" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi matalan tason kenttään (◄ Author)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblXmpPublisherLabel" text="Kustantaja:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfXmpPublisher" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnXmpPublisherToLow" text="◄" onAction="#onKopioiXmpPublisherToLow" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi matalan tason kenttään (◄ Publisher)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblXmpSubjectLabel" text="Aihe (Description):" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfXmpSubject" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnXmpSubjectToLow" text="◄" onAction="#onKopioiXmpSubjectToLow" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi matalan tason kenttään (◄ Subject)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblXmpKeywordsLabel" text="Avainsanat (Subject):" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfXmpKeywords" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnXmpKeywordsToLow" text="◄" onAction="#onKopioiXmpKeywordsToLow" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi matalan tason kenttään (◄ Keywords)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblXmpDateLabel" text="Päiväys/Vuosi:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfXmpDate" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnXmpDateToLow" text="◄" onAction="#onKopioiXmpDateToLow" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi matalan tason kenttään (◄ Date)"/></tooltip>
+                                    </Button>
+                                </HBox>
+
+                                <Label fx:id="lblXmpLanguageLabel" text="Kieli (Language):" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <HBox spacing="4.0" alignment="CENTER_LEFT" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                                    <TextField fx:id="tfXmpLanguage" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnXmpLanguageToLow" text="◄" onAction="#onKopioiXmpLanguageToLow" styleClass="arrow-button" disable="true">
+                                        <tooltip><Tooltip text="Kopioi matalan tason kenttään (◄ Language)"/></tooltip>
+                                    </Button>
+                                </HBox>
+                            </GridPane>
+
+                            <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="ALWAYS">
+                                <Button fx:id="btnTallennaXmp" text="Tallenna PDF (XML-taso)" onAction="#onTallennaXmp" disable="true" styleClass="primary-button"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- 3. PANEELI: EPUB-metatiedot (näytetään avattaessa tai EPUB-vertailussa) -->
+                        <VBox fx:id="epubPanel" spacing="10.0" styleClass="meta-panel" HBox.hgrow="ALWAYS" visible="false" managed="false">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label fx:id="lblEpubPanelTitle" text="EPUB-metatiedot" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="btnSuljeEpub" text="Sulje vertailu" onAction="#onSuljeEpubPanel"/>
+                            </HBox>
+                            <Label fx:id="lblEpubTiedosto" text="Tiedosto: -" styleClass="charset-label"/>
+
+                            <GridPane hgap="8.0" vgap="8.0">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="85.0" prefWidth="95.0"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+
+                                <Label fx:id="lblEpubTitleLabel" text="Otsikko (Title):" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="tfEpubTitle" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                <Label fx:id="lblEpubAuthorLabel" text="Tekijä (Author):" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="tfEpubAuthor" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                <Label fx:id="lblEpubPublisherLabel" text="Kustantaja:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="tfEpubPublisher" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                <Label fx:id="lblEpubSubjectLabel" text="Aihe (Subject):" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="tfEpubSubject" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                                <Label fx:id="lblEpubKeywordsLabel" text="Avainsanat:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="tfEpubKeywords" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                                <Label fx:id="lblEpubDateLabel" text="Päiväys/Vuosi:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="tfEpubDate" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                                <Label fx:id="lblEpubLanguageLabel" text="Kieli (Language):" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="tfEpubLanguage" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+                            </GridPane>
+
+                            <!-- EPUB manuaaliset kopiointipainikkeet (käyttäjän määräämänä) -->
+                            <VBox spacing="6.0">
+                                <HBox spacing="8.0">
+                                    <Button fx:id="btnKopioiEpubToLow" text="Kopioi EPUB -> PDF (Matala)" onAction="#onKopioiEpubToLow"/>
+                                    <Button fx:id="btnKopioiEpubToXmp" text="Kopioi EPUB -> PDF (XML)" onAction="#onKopioiEpubToXmp"/>
+                                </HBox>
+                                <HBox spacing="8.0">
+                                    <Button fx:id="btnKopioiLowToEpub" text="Kopioi PDF (Matala) -> EPUB" onAction="#onKopioiLowToEpub"/>
+                                    <Button fx:id="btnKopioiXmpToEpub" text="Kopioi PDF (XML) -> EPUB" onAction="#onKopioiXmpToEpub"/>
+                                </HBox>
+                            </VBox>
+
+                            <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="ALWAYS">
+                                <Button fx:id="btnTallennaEpub" text="Tallenna EPUB-tiedostoon" onAction="#onTallennaEpub" disable="true" styleClass="primary-button"/>
+                            </HBox>
+                        </VBox>
+
+                    </HBox>
+                </VBox>
+            </ScrollPane>
+        </SplitPane>
+    </center>
+
+    <!-- ALAPALKKI: Tilapalkki -->
+    <bottom>
+        <HBox alignment="CENTER_LEFT" styleClass="status-bar">
+            <Label fx:id="lblStatus" text="Valmis." styleClass="status-label"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

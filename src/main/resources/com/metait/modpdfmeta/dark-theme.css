@@ -1,0 +1,332 @@
+/* Tumma, siisti ja moderni tyyli JavaFX-sovellukselle */
+
+.root {
+    -fx-base: #1e1e24;
+    -fx-background: #1e1e24;
+    -fx-control-inner-background: #282a36;
+    -fx-accent: #6272a4;
+    -fx-focus-color: #bd93f9;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: #f8f8f2;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+    -fx-font-size: 13px;
+}
+
+/* Työkalupalkki ja yläpalkki */
+.header-box {
+    -fx-background-color: #282a36;
+    -fx-border-color: #44475a;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 15 10 15;
+}
+
+.app-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #50fa7b;
+}
+
+.info-label {
+    -fx-text-fill: #f1fa8c;
+    -fx-font-size: 12px;
+}
+
+/* Painikkeet */
+.button {
+    -fx-background-color: #44475a;
+    -fx-text-fill: #f8f8f2;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-padding: 6 12 6 12;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #6272a4;
+}
+
+.button:pressed {
+    -fx-background-color: #bd93f9;
+    -fx-text-fill: #282a36;
+}
+
+.button:disabled {
+    -fx-opacity: 0.45;
+}
+
+.primary-button {
+    -fx-background-color: #50fa7b;
+    -fx-text-fill: #282a36;
+    -fx-font-weight: bold;
+}
+
+.primary-button:hover {
+    -fx-background-color: #8be9fd;
+}
+
+.accent-button {
+    -fx-background-color: #bd93f9;
+    -fx-text-fill: #282a36;
+    -fx-font-weight: bold;
+}
+
+.accent-button:hover {
+    -fx-background-color: #ff79c6;
+}
+
+/* Kenttäkohtaiset siirtonuolet */
+.arrow-button {
+    -fx-background-color: #44475a;
+    -fx-text-fill: #bd93f9;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-padding: 3 8 3 8;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-cursor: hand;
+    -fx-min-width: 28px;
+    -fx-pref-width: 28px;
+}
+
+.arrow-button:hover {
+    -fx-background-color: #6272a4;
+    -fx-text-fill: #50fa7b;
+}
+
+.arrow-button:pressed {
+    -fx-background-color: #bd93f9;
+    -fx-text-fill: #282a36;
+}
+
+.arrow-button:disabled {
+    -fx-opacity: 0.35;
+}
+
+/* Tekstikentät */
+.text-field {
+    -fx-background-color: #282a36;
+    -fx-text-fill: #f8f8f2;
+    -fx-border-color: #44475a;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 5 8 5 8;
+}
+
+.text-field:focused {
+    -fx-border-color: #bd93f9;
+    -fx-background-color: #21222c;
+}
+
+/* Paneelit */
+.meta-panel {
+    -fx-background-color: #21222c;
+    -fx-border-color: #44475a;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 12;
+}
+
+.panel-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #8be9fd;
+    -fx-padding: 0 0 6 0;
+}
+
+.field-label {
+    -fx-text-fill: #f8f8f2;
+    -fx-font-size: 12px;
+}
+
+.charset-label {
+    -fx-text-fill: #ffb86c;
+    -fx-font-style: italic;
+    -fx-font-size: 11px;
+}
+
+.warning-label {
+    -fx-text-fill: #ffb86c;
+    -fx-background-color: rgba(255, 184, 108, 0.15);
+    -fx-border-color: #ffb86c;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 5 8 5 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.success-label {
+    -fx-text-fill: #50fa7b;
+    -fx-font-size: 11px;
+}
+
+/* Pudotusvalikko (ComboBox) */
+.combo-box {
+    -fx-background-color: #282a36;
+    -fx-border-color: #44475a;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-cursor: hand;
+}
+
+.combo-box:hover {
+    -fx-border-color: #6272a4;
+}
+
+.combo-box .cell {
+    -fx-text-fill: #f8f8f2;
+    -fx-padding: 3 6 3 6;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #282a36;
+    -fx-border-color: #6272a4;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f8f8f2;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #44475a;
+}
+
+/* Tiedostolista */
+.list-view {
+    -fx-background-color: #21222c;
+    -fx-border-color: #44475a;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f8f8f2;
+    -fx-padding: 5 8 5 8;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #44475a;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #6272a4;
+    -fx-text-fill: #ffffff;
+}
+
+/* Tiedostolistan tyyppitunnisteet (badget) */
+.badge-pdf {
+    -fx-background-color: #ff8787;
+    -fx-text-fill: #1e1e24;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-background-radius: 3px;
+    -fx-padding: 1 5 1 5;
+}
+
+.badge-epub {
+    -fx-background-color: #2e7d32;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-background-radius: 3px;
+    -fx-padding: 1 5 1 5;
+}
+
+.badge-muu {
+    -fx-background-color: #6272a4;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-background-radius: 3px;
+    -fx-padding: 1 5 1 5;
+}
+
+.file-list-dirty {
+    -fx-text-fill: #ffb86c;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.file-list-name {
+    -fx-text-fill: #f8f8f2;
+    -fx-font-size: 13px;
+}
+
+.list-cell:filled:selected .file-list-name {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+/* Tilapalkki */
+.status-bar {
+    -fx-background-color: #282a36;
+    -fx-border-color: #44475a;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 6 15 6 15;
+}
+
+.status-label {
+    -fx-text-fill: #f8f8f2;
+    -fx-font-size: 12px;
+}
+
+/* Tooltip */
+.tooltip {
+    -fx-background-color: #282a36;
+    -fx-text-fill: #f8f8f2;
+    -fx-border-color: #6272a4;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 4 8 4 8;
+    -fx-font-size: 12px;
+}
+
+/* TabPane & Tabs (Käyttöohje / HelpDialog) */
+.tab-pane .tab-header-area {
+    -fx-background-color: #21222c;
+    -fx-padding: 4 6 0 6;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: #21222c;
+}
+
+.tab {
+    -fx-background-color: #282a36;
+    -fx-background-radius: 4 4 0 0;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+
+.tab:hover {
+    -fx-background-color: #44475a;
+}
+
+.tab:selected {
+    -fx-background-color: #44475a;
+    -fx-border-color: #bd93f9;
+    -fx-border-width: 0 0 2 0;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #f8f8f2;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #50fa7b;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
