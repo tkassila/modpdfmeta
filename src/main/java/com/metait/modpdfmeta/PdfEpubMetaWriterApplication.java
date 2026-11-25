@@ -12,7 +12,7 @@ public class PdfEpubMetaWriterApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(PdfEpubMetaWriterApplication.class.getResource("pdfepubmetawriter-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1240, 800);
-        stage.setTitle("PdfEpubMetaWriter - PDF & EPUB Metatietojen Muokkain");
+        stage.setTitle("PdfEpubMetaWriter - PDF & EPUB Metadata editor");
         stage.setScene(scene);
         stage.show();
     }
